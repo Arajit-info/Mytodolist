@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 const MytodoList = () => {
   const [todos, setTodos] = useState([
@@ -8,6 +8,7 @@ const MytodoList = () => {
     { id: 4, text: "Todo 4", completed: false },
     { id: 5, text: "Todo 5", completed: false },
   ]);
+  const [inputValue, setInputValue] = useState("");
 
   const handleChecked = (id) => {
     setTodos((prev) =>
@@ -18,11 +19,13 @@ const MytodoList = () => {
   };
 
   const handleDelete = (id) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    setTodos((prev) => prev?.filter((todo) => todo.id !== id));
   };
 
   const totalCompleted = todos.filter((todo) => todo.completed).length;
-
+  const handleInputChange = useCallback((e) => {
+    setInputValue(e.target.value);
+  }, []);
   return (
     <div>
       <div>My todolist</div>
@@ -30,6 +33,13 @@ const MytodoList = () => {
       <div>Total List: {todos.length}</div>
 
       <div>All Lists</div>
+
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => handleInputChange(e)}
+      />
+      <button>Submit</button>
       {todos.map((todo) => (
         <div key={todo.id} style={{ marginBottom: "8px" }}>
           <label htmlFor={`todo-${todo.id}`}>
@@ -37,12 +47,12 @@ const MytodoList = () => {
               type="checkbox"
               id={`todo-${todo.id}`}
               checked={todo.completed}
-              onChange={() => handleChecked(todo.id)}
+              onChange={() => handleChecked(todo?.id)}
             />
             {todo.text}
           </label>
           <button
-            onClick={() => handleDelete(todo.id)}
+            onClick={() => handleDelete(todo?.id)}
             style={{ marginLeft: "10px" }}
           >
             delete
